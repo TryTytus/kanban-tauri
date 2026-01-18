@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {useDraggable} from '@dnd-kit/core';
 
 import { deleteStory } from '../store';
@@ -17,11 +17,15 @@ interface DraggableProps {
 export function Draggable({id, title, tag = 'Design', sectionId, onDelete}: DraggableProps) {
 
   const dispatch = useDispatch();
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const {attributes, listeners, setNodeRef, transform} = useDraggable({
     id: id,
     data: { id, title, tag } 
   });
-  const style = transform ? {
+  
+  // Disable drag transform when deleting to let CSS animation take over
+  const style = transform && !isDeleting ? {
     transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
   } : undefined;
 
@@ -37,19 +41,38 @@ export function Draggable({id, title, tag = 'Design', sectionId, onDelete}: Drag
     }
   }
 
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsDeleting(true);
+    // Wait for animation to finish before dispatching delete
+    setTimeout(() => {
+      console.log('Deleting story', { sectionId, storyId: id });
+      dispatch(deleteStory({ sectionId, storyId: id }));
+    }, 500); // Increased duration for the dramatic effect
+  };
+
   return (
-        <div ref={setNodeRef} {...listeners} {...attributes} style={style} className="group relative bg-white p-4 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-default touch-none">
+        <div 
+          ref={setNodeRef} 
+          {...listeners} 
+          {...attributes} 
+          style={style} 
+          className={`
+            group relative bg-white p-4 rounded-lg shadow-sm border border-gray-100 
+            hover:shadow-xl transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] cursor-default touch-none transform-gpu backface-hidden
+            ${isDeleting 
+                ? 'opacity-0 scale-75 -rotate-6 translate-y-12 blur-sm grayscale ring-4 ring-red-100 z-50' 
+                : 'opacity-100 scale-100 hover:-translate-y-1'}
+          `}
+        >
         
         { (
           <button 
             onPointerDown={(e) => e.stopPropagation()}
-            onClick={(e) => {
-              e.stopPropagation();
-              console.log('Deleting story', { sectionId, storyId: id });
-              dispatch(deleteStory({ sectionId, storyId: id }));
-            }}
+            onClick={handleDelete}
             className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-md cursor-pointer"
             aria-label="Delete task"
+            disabled={isDeleting}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M3 6h18"></path>
