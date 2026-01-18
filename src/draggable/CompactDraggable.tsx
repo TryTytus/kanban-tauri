@@ -122,6 +122,35 @@ export function CompactTaskRow({
                 {title}
             </div>
 
+            {/* Timer Control - New Design */}
+            <div 
+                className={`flex items-center gap-2 mr-6 transition-opacity duration-200 ${running || seconds > 0 ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+                onPointerDown={(e) => e.stopPropagation()}
+            >
+                <div className={`text-[11px] font-mono font-medium tabular-nums tracking-wide ${
+                    running ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-400 dark:text-gray-500'
+                }`}>
+                    {formattedTime}
+                </div>
+                
+                <button 
+                    onClick={toggleRunning}
+                    className={`
+                        p-1.5 rounded-full transition-all duration-200 flex items-center justify-center
+                        ${running 
+                            ? 'bg-indigo-100 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-300 hover:bg-indigo-200 dark:hover:bg-indigo-500/30' 
+                            : 'bg-gray-100 text-gray-400 dark:bg-gray-700/50 dark:text-gray-500 hover:bg-indigo-50 hover:text-indigo-600 dark:hover:bg-gray-600 dark:hover:text-gray-300'}
+                    `}
+                    title={running ? "Pause timer" : "Start timer"}
+                >
+                    {running ? (
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6" y="4" width="4" height="16" rx="1" /><rect x="14" y="4" width="4" height="16" rx="1" /></svg>
+                    ) : (
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M5 3l14 9-14 9V3z" /></svg>
+                    )}
+                </button>
+            </div>
+
             {/* Tag */}
             <div className="mr-8 flex-shrink-0">
                 <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide ${getTagColor(tag)}`}>
@@ -141,16 +170,6 @@ export function CompactTaskRow({
                     </button>
                 </div>
             )}
-
-            {formattedTime}
-
-            <button className='ml-2 text-sm text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors'
-                onPointerDown={(e) => e.stopPropagation()}
-                onClick={toggleRunning}
-            >
-
-                measure time
-            </button>
         </div>
     );
 }
