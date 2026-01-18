@@ -46,10 +46,16 @@ function Droppable({id, title, children, count, handleAddTodo}: DroppableProps) 
 export function MultipleDroppables({handleAddTodo}: {handleAddTodo: () => void}) {
   const sections = useSelector((state: RootState) => state.kanban.sections);
   
+
+  const map = new Map(); 
+  map.set('todo', 'TO DO');
+  map.set('inprogress', 'In Progress');
+  map.set('done', 'Done');
+
   return (
     <section className="grid grid-cols-1 md:grid-cols-3 gap-6 h-full p-8">
       {Object.entries(sections).map(([sectionId, stories]) => (
-        <Droppable id={sectionId} key={sectionId} title={sectionId} count={stories.length} handleAddTodo={handleAddTodo}>
+        <Droppable id={sectionId} key={sectionId} title={map.get(sectionId)} count={stories.length} handleAddTodo={handleAddTodo}>
             {stories.map(story => (
                 <Draggable key={story.id} id={story.id} title={story.title} sectionId={sectionId as any} />
             ))}
