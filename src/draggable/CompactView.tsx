@@ -23,7 +23,7 @@ function CompactSection({ id, title, count, children, handleAddTodo }: CompactSe
                     title === 'todo' ? 'bg-pink-500' : 
                     title === 'inprogress' ? 'bg-indigo-500' : 'bg-emerald-500'
                 }`}></div>
-                <h2 className="font-bold text-sm uppercase tracking-wide text-gray-700 dark:text-gray-300 flex-grow">
+                <h2 className="font-bold text-sm uppercase tracking-wide text-gray-500 dark:text-gray-400 flex-grow">
                     {title}
                 </h2>
                 <span className="text-xs text-gray-400 font-mono mr-4">{count} tasks</span>
@@ -37,10 +37,10 @@ function CompactSection({ id, title, count, children, handleAddTodo }: CompactSe
             </div>
 
             {/* Droppable Area */}
-            <div ref={setNodeRef} className="flex flex-col min-h-[50px] relative">
+            <div ref={setNodeRef} className="flex flex-col gap-2 min-h-[50px] relative pt-2">
                 {/* Background lines for emptiness */}
                 {React.Children.count(children) === 0 && (
-                     <div className="absolute inset-0 border-b border-dashed border-gray-100 dark:border-gray-800 flex items-center justify-center text-xs text-gray-400">
+                     <div className="absolute inset-0 top-2 border-2 border-dashed border-gray-100 dark:border-gray-800 rounded-xl flex items-center justify-center text-xs text-gray-400">
                         Drop tasks here
                      </div>
                 )}
