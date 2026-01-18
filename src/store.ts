@@ -51,11 +51,17 @@ const kanbanSlice = createSlice({
         const [movedStory] = sourceList.splice(storyIndex, 1);
         state.sections[toSectionId].push(movedStory);
       }
+    },
+    deleteStory: (state, action: PayloadAction<{ sectionId: keyof KanbanState['sections']; storyId: string }>) => {
+      const { sectionId, storyId } = action.payload;
+      const section = state.sections[sectionId]
+      state.sections[sectionId] = section.filter(story => story.id !== storyId)
     }
+
   },
 });
 
-export const { setDropId, addToSections, moveStory } = kanbanSlice.actions;
+export const { setDropId, addToSections, moveStory, deleteStory } = kanbanSlice.actions;
 
 export const store = configureStore({
   reducer: {

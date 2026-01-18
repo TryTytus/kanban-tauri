@@ -48,7 +48,7 @@ export function MultipleDroppables({handleAddTodo}) {
       {Object.entries(sections).map(([sectionId, stories]) => (
         <Droppable id={sectionId} key={sectionId} title={sectionId} count={stories.length} handleAddTodo={handleAddTodo}>
             {stories.map(story => (
-                <Draggable key={story.id} id={story.id} title={story.title} />
+                <Draggable key={story.id} id={story.id} title={story.title} sectionId={sectionId} />
             ))}
         </Droppable>
       ))}
