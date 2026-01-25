@@ -5,6 +5,7 @@ interface Story {
   id: string;
   title: string;
   tag:  string;
+  seconds?: number;
 }
 
 interface KanbanState {
@@ -56,12 +57,20 @@ const kanbanSlice = createSlice({
       const { sectionId, storyId } = action.payload;
       const section = state.sections[sectionId]
       state.sections[sectionId] = section.filter(story => story.id !== storyId)
+    },
+    updateStory: (state, action: PayloadAction<{ sectionId: keyof KanbanState['sections']; storyId: string; updates: Partial<Story> }>) => {
+      const { sectionId, storyId, updates } = action.payload;
+      const section = state.sections[sectionId];
+      const storyIndex = section.findIndex(story => story.id === storyId);
+      if (storyIndex !== -1) {
+        section[storyIndex] = { ...section[storyIndex], ...updates };
+      }
     }
 
   },
 });
 
-export const { setDropId, addToSections, moveStory, deleteStory } = kanbanSlice.actions;
+export const { setDropId, addToSections, moveStory, deleteStory, updateStory } = kanbanSlice.actions;
 
 export const store = configureStore({
   reducer: {

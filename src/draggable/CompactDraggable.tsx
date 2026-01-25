@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDraggable } from '@dnd-kit/core';
-import { useDispatch } from 'react-redux';
-import { deleteStory } from '../store';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteStory, updateStory } from '../store';
 
 type Section = 'todo' | 'inprogress' | 'done';
 
@@ -23,13 +23,21 @@ export function CompactTaskRow({
     style, attributes, listeners, setNodeRef, isDragging, isOverlay
 }: CompactDraggableProps) {
     const dispatch = useDispatch();
+
+    const loadSeconds = useSelector((state: any) => state.kanban.sections[sectionId].find((story: any) => story.id === id)?.seconds || 0);
+
     const [isDeleting, setIsDeleting] = useState(false);
 
     const [running, setRunning] = useState(false);
-    const [seconds, setSeconds] = useState(0);
+    const [seconds, setSeconds] = useState(loadSeconds);
 
     function toggleRunning() {
         setRunning((prev) => !prev);
+    }
+
+    function updateTime(sec: number) {
+        dispatch(updateStory({ sectionId, storyId: id, updates: { seconds: sec } }));
+        console.log("Update time placeholder", sec);
     }
 
 
@@ -37,7 +45,13 @@ export function CompactTaskRow({
         if (!running) return;
 
         const interval = setInterval(() => {
-            setSeconds((prev) => prev + 1);
+            setSeconds((prev) => {
+            if (prev % 10 === 0) {
+                updateTime(prev + 1);
+            }
+                return prev + 1;
+            });
+
         }, 1000);
 
         return () => clearInterval(interval);

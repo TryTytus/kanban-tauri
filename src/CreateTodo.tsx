@@ -1,10 +1,12 @@
 import { useState } from "react";
 
-export function CreateTodo({display, toggleDisplay, handleAddTodo}) {
+export function CreateTodo({display, toggleDisplay, handleAddTodo, handleUpdate, titleParam = '', tagParam = '', sectionParam = 'todo'}) {
 
- const [title, setTitle] = useState("");
- const [tag, setTag] = useState("");
- const [section, setSection] = useState("todo");
+ const [title, setTitle] = useState(titleParam);
+ const [tag, setTag] = useState(tagParam);
+ const [section, setSection] = useState(sectionParam);
+
+
 
   return (
       <div className={`fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity ${!display ? 'hidden' : ''}`}>

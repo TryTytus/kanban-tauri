@@ -9,6 +9,7 @@ import { addToSections, moveStory } from './store';
 import type { RootState } from './store';
 import { CreateTodo } from './CreateTodo';
 import { useState, useEffect } from 'react';
+import { updateStory } from './store';
 
 function App() {
   const [popupVisible, setPopupVisible] = useState(false);
@@ -107,6 +108,11 @@ function App() {
 
     setPopupVisible(false);
   }
+
+  const handleUpdate = (sectionId, storyId: string, title: string, tag: string) => {
+
+    dispatch(updateStory({sectionId, storyId, updates: { title, tag }}));
+  };
   
   return (
     <div className="min-h-screen transition-colors duration-300 bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 relative">
@@ -150,7 +156,7 @@ function App() {
            <CompactView handleAddTodo={() => setPopupVisible(true)} />
         )}
         
-        <CreateTodo toggleDisplay={() => setPopupVisible(false)} display={popupVisible} handleAddTodo={handleAddTodo} />
+        <CreateTodo toggleDisplay={() => setPopupVisible(false)} display={popupVisible} handleAddTodo={handleAddTodo} handleUpdate={handleUpdate} />
         
         <DragOverlay dropAnimation={{
           duration: 250,
